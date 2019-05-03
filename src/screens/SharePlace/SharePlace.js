@@ -1,14 +1,28 @@
-import React, { Component } from 'react'
-import { View, Text } from 'react-native'
+import React, { Component } from 'react';
+import { View } from 'react-native';
+import { connect } from 'react-redux';
+
+import PlaceInput from '../../components/PlaceInput/PlaceInput';
+import { addPlace } from '../../store/actions/index';
 
 class sharePlace extends Component {
-    render() { 
-        return ( 
-            <View>
-                <Text>OnSharePlaceScreen</Text>
-            </View>
-         );
-    }
+	placeAddedHandler = (placeName) => {
+		this.props.onAddPlace(placeName);
+	};
+
+	render() {
+		return (
+			<View>
+				<PlaceInput onPlaceAdded={this.placeAddedHandler} />
+			</View>
+		);
+	}
 }
- 
-export default sharePlace;
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		onAddPlace: (placeName) => dispatch(addPlace(placeName))
+	};
+};
+
+export default connect(null, mapDispatchToProps)(sharePlace);

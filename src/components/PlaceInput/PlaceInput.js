@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, TextInput, Button, StyleSheet } from "react-native";
 
+// child of SharePlace
 class PlaceInput extends Component {
   state = {
     placeName: ""
@@ -20,7 +21,7 @@ class PlaceInput extends Component {
     if (this.state.placeName.trim() === "") {
       return;
     }
-
+    /// gets executed in SharePlace
     this.props.onPlaceAdded(this.state.placeName);
   };
 
