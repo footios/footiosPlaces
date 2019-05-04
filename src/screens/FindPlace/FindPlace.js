@@ -2,19 +2,21 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
 
-import PlaceList from '../../components/PlaceList/PlaceList'
+import PlaceList from '../../components/PlaceList/PlaceList';
 
 class FindPlace extends Component {
-    itemSelectedHandler = key => {
-        const selPlace = this.props.places.find(place => place.key === key)
-        this.props.navigator.push({
-            screen: 'footios-places.PlaceDetailScreen',
-            title: selPlace.name,
-            passProps: {
-                selectedPlace: selPlace 
-            } 
-        });
-    }
+	itemSelectedHandler = (key) => {
+		const selPlace = this.props.places.find((place) => {
+			return place.key === key;
+		});
+		this.props.navigator.push({
+			screen: 'footios-places.PlaceDetailScreen',
+			title: selPlace.name,
+			passProps: {
+				selectedPlace: selPlace
+			}
+		});
+	};
 	render() {
 		return (
 			<View>

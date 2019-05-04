@@ -19,7 +19,7 @@ const store = configureStore();
 Navigation.registerComponent('footios-places.AuthScreen', () => AuthScreen, store, Provider);
 Navigation.registerComponent('footios-places.SharePlaceScreen', () => SharePlaceScreen, store, Provider);
 Navigation.registerComponent('footios-places.FindPlaceScreen', () => FindPlaceScreen, store, Provider);
-Navigation.registerComponent('footios-places.PlaceDetailScreen', () => PlaceDetailScreen);
+Navigation.registerComponent('footios-places.PlaceDetailScreen', () => PlaceDetailScreen, store, Provider);
 
 // Start an App
 Navigation.startSingleScreenApp({
