@@ -3,6 +3,7 @@ import { StyleSheet, FlatList } from "react-native";
 
 import ListItem from "../ListItem/ListItem";
 
+// child of FindPlace
 const placeList = props => {
   return (
     <FlatList
