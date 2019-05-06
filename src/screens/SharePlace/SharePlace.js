@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Button, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 
 import { addPlace } from '../../store/actions/index';
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
-import MainText from '../../components/UI/MainText/MainText';
-import HeadingText from '../../components/UI/HeadingText/HeadingText';
-import imagePlaceholder from '../../assets/beautiful-place.jpg'
+import PlacePreview from '../../components/PlacePreview/PlacePreview';
+
 
 class SharePlaceScreen extends Component {
 	constructor(props) {
 		super(props);
+	
 		// setOnNavigatorEvent: here we specify a method that should be executed
 		// every time an event occurs.
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
 	}
+	state = {
+		placeName: ''
+	};
 
 	// above in the constructor, we don't need to bind.`this`
 	// like this: this.onNavigatorEvent.bind(this)
@@ -30,32 +33,37 @@ class SharePlaceScreen extends Component {
 		}
 	};
 
-	placeAddedHandler = (placeName) => {
-		this.props.onAddPlace(placeName);
+	placeAddedHandler = () => {
+		if (this.state.placeName.trim() === '') {
+			return;
+		}
+		this.props.onAddPlace(this.state.placeName);
+	};
+
+	placeNameChangedHandler = (val) => {
+		this.setState({
+			placeName: val
+		});
 	};
 
 	render() {
 		return (
 			<View style={styles.container}>
 				<ScrollView>
-					<MainText>
-						<HeadingText>Share a place with us!</HeadingText>
-					</MainText>
-					<View style={styles.placeholder}>
-						<Image style={styles.previewImage} source={imagePlaceholder} />
-					</View>
-					<View style={styles.button}>
-						<Button title="Pick Image" />
-					</View>
+					<PlacePreview />
 					<View style={styles.placeholder}>
 						<Text>Map</Text>
 					</View>
 					<View style={styles.button}>
 						<Button title="Locate Me" />
 					</View>
-					<DefaultInput placeholder="Place name" />
+					<DefaultInput
+						placeholder="Place name"
+						value={this.state.placeName}
+						onChangeText={this.placeNameChangedHandler}
+					/>
 					<View style={styles.button}>
-						<Button title="Share the Place" />
+						<Button title="Share the Place" onPress={this.placeAddedHandler} />
 					</View>
 				</ScrollView>
 			</View>
