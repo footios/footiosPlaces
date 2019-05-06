@@ -22,5 +22,7 @@ Section 6
 Navigation in React Native Apps
 1hr 38min
 
-
+Section 7
+Styling & Animating React Native Apps (Correctly)
+2hr 49min
 

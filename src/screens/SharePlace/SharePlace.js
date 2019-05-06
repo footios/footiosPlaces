@@ -8,14 +8,14 @@ import { addPlace } from '../../store/actions/index';
 class SharePlaceScreen extends Component {
 	constructor(props) {
 		super(props);
-		// setOnNavigatorEvent: here we specify a meth that should be executed
+		// setOnNavigatorEvent: here we specify a method that should be executed
 		// every time an event occurs.
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent)
 	}
 
 	// above in the constructor, we don't need to bind.`this`
-	// because we use here an arrow func.
 	// like this: this.onNavigatorEvent.bind(this)
+	// because we use here an arrow func.
 	onNavigatorEvent = event => {
 		//console.log(event);
 		if (event.type === 'NavBarButtonPress'){
