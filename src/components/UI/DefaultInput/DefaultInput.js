@@ -6,6 +6,9 @@ const defaultInput = (props) => {
         /* underlineColorAndroid='transparent'
         not needed! we got no underline 
         
+        {...props}
+        this is for the placeholder etc
+
         [styles.input, props.style]
         use an array to merge the default styles with
         the styles you get from outside (e.g. AuthScreen)

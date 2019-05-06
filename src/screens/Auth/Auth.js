@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
-import startMainTabs from '../MainTabs/startMainTabs';
-import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
 
+import startMainTabs from '../MainTabs/startMainTabs';
+import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
+import HeadingText from '../../components/UI/HeadingText/HeadingText';
+import MainText from '../../components/UI/MainText/MainText'
 
 /* Screens are components we load through RNNavigation (instead of Router)! */
 
@@ -14,9 +16,11 @@ class AuthScreen extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text>Auth Screen</Text>
+            <MainText>
+				<HeadingText>Please Log in</HeadingText>
+            </MainText>
 				<Button title="Switch to Login" />
-				<View style={styles.inputContainer} >
+				<View style={styles.inputContainer}>
 					<DefaultInput placeholder="Your e-mail adress" style={styles.input} />
 					<DefaultInput placeholder="Password" style={styles.input} />
 					<DefaultInput placeholder="Confirm password" style={styles.input} />
@@ -35,11 +39,11 @@ const styles = StyleSheet.create({
 	},
 	inputContainer: {
 		width: '80%'
-    },
-    input: {
-        backgroundColor: '#eee',
-        borderColor: '#bbb'
-    } 
+	},
+	input: {
+		backgroundColor: '#eee',
+		borderColor: '#bbb'
+	}
 });
 
 export default AuthScreen;
