@@ -57,8 +57,9 @@ class SharePlaceScreen extends Component {
 					<PickImage />
 					<PickLocation />
 					</View>
-					
+					<View style={styles.placeInput} >
 					<PlaceInput placeName={this.state.placeName} onChangeText={this.placeNameChangedHandler} />
+					</View>
 					<View style={styles.button}>
 						<Button title="Share the Place" onPress={this.placeAddedHandler} />
 					</View>
@@ -75,6 +76,10 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		margin: 8
+	},
+	placeInput: {
+		width: 300,
+		alignItems: 'center'
 	}
 });
 
