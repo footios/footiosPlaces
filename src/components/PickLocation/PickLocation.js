@@ -5,7 +5,7 @@ class PickLocation extends Component {
 	state = {};
 	render() {
 		return (
-			<View >
+			<View style={{alignItems:'center'}} >
 				<View style={styles.placeholder}>
 					<Text>Map</Text>
 				</View>

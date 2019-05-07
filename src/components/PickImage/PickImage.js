@@ -7,7 +7,7 @@ class PickImage extends Component {
 	state = {};
 	render() {
 		return (
-			<View  >
+			<View style={{alignItems:'center'}} >
 				<View style={styles.placeholder}>
 					<Image style={styles.previewImage} source={imagePlaceholder} />
 				</View>
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 		borderColor: 'black',
 		backgroundColor: '#eee',
 		width: '80%',
-		height: 150
+		height: 150,
 	},
 	button: {
 		margin: 8

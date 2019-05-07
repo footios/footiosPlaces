@@ -53,8 +53,11 @@ class SharePlaceScreen extends Component {
 					<MainText>
 						<HeadingText>Share a place with us!</HeadingText>
 					</MainText>
+					<View >
 					<PickImage />
 					<PickLocation />
+					</View>
+					
 					<PlaceInput placeName={this.state.placeName} onChangeText={this.placeNameChangedHandler} />
 					<View style={styles.button}>
 						<Button title="Share the Place" onPress={this.placeAddedHandler} />
