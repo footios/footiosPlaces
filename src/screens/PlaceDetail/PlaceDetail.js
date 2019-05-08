@@ -1,44 +1,78 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
-import { View, Image, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Image, Text, StyleSheet, TouchableOpacity, Platform, Dimensions } from 'react-native';
 
 import { deletePlace } from '../../store/actions/index';
 
 class PlaceDetail extends Component {
+	state = {
+		viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
+	};
+
+	constructor(props) {
+		super(props);
+		Dimensions.addEventListener('change', this.updateStyles);
+	}
+
+	componentWillUnmount() {
+		Dimensions.removeEventListener('change', this.updateStyles);
+	}
+
+	updateStyles = (dims) => {
+		this.setState({
+			viewMode: dims.window.height > 500 ? 'portrait' : 'landscape'
+		});
+	};
 
 	placeDeleteHandler = () => {
 		// selectedPlace: is props we pushed from FindPlace
 		this.props.onDeletePlace(this.props.selectedPlace.key);
 		this.props.navigator.pop();
-	}
+	};
 
-	render(){
+	render() {
 		return (
 			<View style={styles.container}>
-				<View>
-					<Image source={this.props.selectedPlace.image} style={styles.placeImage} />
-					<Text style={styles.placeName}>{this.props.selectedPlace.name}</Text>
+				<View style={this.state.viewMode === 'landscape' ? styles.viewImageLandScape : null}>
+					<Image
+						source={this.props.selectedPlace.image}
+						style={
+							this.state.viewMode === 'portrait' ? styles.placeImagePortrait : styles.placeImageLanscape
+						}
+					/>
 				</View>
-				<View>
+				<View style={this.state.viewMode === 'landscape' ? styles.nameAndIcon : null}>
+					<Text style={styles.placeName}>{this.props.selectedPlace.name}</Text>
 					<TouchableOpacity onPress={this.placeDeleteHandler}>
 						<View style={styles.deleteButton}>
-							<Icon size={30} name={Platform.OS ==='android' ? "md-trash" : "ios-trash"} color="red" />
+							<Icon size={30} name={Platform.OS === 'android' ? 'md-trash' : 'ios-trash'} color="red" />
 						</View>
 					</TouchableOpacity>
 				</View>
 			</View>
 		);
 	}
-	
-};
+}
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ 
 	container: {
 		margin: 22
 	},
-	placeImage: {
+	nameAndIcon: {
+		flexDirection: 'row',
+		justifyContent: 'space-evenly'
+	},
+	placeImagePortrait: {
 		width: '100%',
+		height: 200
+	},
+	viewImageLandScape: {
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	placeImageLanscape: {
+		width: '50%',
 		height: 200
 	},
 	placeName: {
@@ -51,10 +85,10 @@ const styles = StyleSheet.create({
 	}
 });
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
 	return {
-		onDeletePlace: key => dispatch(deletePlace(key))
-	}
-}
+		onDeletePlace: (key) => dispatch(deletePlace(key))
+	};
+};
 
 export default connect(null, mapDispatchToProps)(PlaceDetail);
