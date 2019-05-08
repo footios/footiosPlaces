@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
-import { View, Image, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Image, Text, StyleSheet, TouchableOpacity, Platform, ImageBackground } from 'react-native';
 
 import { deletePlace } from '../../store/actions/index';
 
@@ -16,17 +16,14 @@ class PlaceDetail extends Component {
 	render(){
 		return (
 			<View style={styles.container}>
-				<View>
-					<Image source={this.props.selectedPlace.image} style={styles.placeImage} />
-					<Text style={styles.placeName}>{this.props.selectedPlace.name}</Text>
-				</View>
-				<View>
-					<TouchableOpacity onPress={this.placeDeleteHandler}>
-						<View style={styles.deleteButton}>
-							<Icon size={30} name={Platform.OS ==='android' ? "md-trash" : "ios-trash"} color="red" />
-						</View>
-					</TouchableOpacity>
-				</View>
+				<ImageBackground source={this.props.selectedPlace.image} style={styles.placeImage} >
+				<TouchableOpacity onPress={this.placeDeleteHandler}>
+					<View style={styles.deleteButtonAndName}>
+						<Text style={styles.placeName}>{this.props.selectedPlace.name}</Text>
+						<Icon size={30} name={Platform.OS ==='android' ? "md-close" : "ios-close"} color="black" />
+					</View>
+				</TouchableOpacity>
+				</ImageBackground>
 			</View>
 		);
 	}
@@ -46,8 +43,10 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		fontSize: 28
 	},
-	deleteButton: {
-		alignItems: 'center'
+	deleteButtonAndName: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'stretch',
 	}
 });
 

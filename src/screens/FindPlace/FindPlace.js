@@ -10,7 +10,6 @@ class FindPlace extends Component {
 	}
 	state = {
 		placesLoaded: false,
-		removeAnim: new Animated.Value(1)
 	}
     constructor(props) {
 		super(props);
@@ -33,11 +32,9 @@ class FindPlace extends Component {
 		}
 	}
 	placesSearchHandler = () => {
-		Animated.timing(this.state.removeAnim, {
-			toValue: 0,
-			duration: 500,
-			useNativeDriver: true
-		}).start()
+	this.setState({
+		placesLoaded: true
+	})
 	}
  
 	itemSelectedHandler = (key) => {
@@ -55,23 +52,11 @@ class FindPlace extends Component {
 	render() {
 	
 		let content = (
-			<Animated.View style={{
-				opacity: this.state.removeAnim,
-				transform: [
-					{
-						scale: this.state.removeAnim.interpolate({
-							inputRange: [0, 1],
-							outputRange: [12, 1]
-						})
-					}
-				]
-			}} >
 			<TouchableOpacity onPress={this.placesSearchHandler} >
 				<View style={styles.searchButton} >
 					<Text style={styles.searchButtonText} >Find Places</Text>
 				</View>
 			</TouchableOpacity>
-			</Animated.View>
 		)
 		if (this.state.placesLoaded) {
 			content = (
