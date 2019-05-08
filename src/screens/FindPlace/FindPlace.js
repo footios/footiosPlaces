@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 import PlaceList from '../../components/PlaceList/PlaceList';
 
 class FindPlace extends Component {
+	static navigatorStyle = {
+		navBarButtonColor: 'orange'
+	}
     constructor(props) {
 		super(props);
 		// setOnNavigatorEvent: here we specify a meth that should be executed

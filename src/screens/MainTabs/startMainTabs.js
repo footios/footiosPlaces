@@ -42,6 +42,13 @@ const startTabs = () => {
 					}
 				}
 			],
+			tabsStyle: {
+				tabBarSelectedButtonColor: 'orange'
+			},
+			// for android
+			appStyle: {
+				tabBarSelectedButtonColor: 'orange'
+			},
 			drawer: {
 				left: {
 					screen: 'footios-places.SideDrawer'
