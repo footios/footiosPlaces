@@ -7,26 +7,24 @@ import HeadingText from '../../components/UI/HeadingText/HeadingText';
 import MainText from '../../components/UI/MainText/MainText';
 import backgroundImage from '../../assets/background.jpg';
 import ButtondWithBackground from '../../components/UI/ButtonWithBackground/ButtonWithBackground';
+import { tsImportEqualsDeclaration } from '@babel/types';
 
 /* Screens are components we load through RNNavigation (instead of Router)! */
 
 class AuthScreen extends Component {
+	/* Because we manage the responsiveness of the UI in the state,
+	 but we miss the optimazation the StyleSheet does.
+	 But we can use an alternative: 
+	 Define two different rulls in StyleSheet and load them
+	 according to viewMode. */
 	state = {
-		respStyles: {
-			pwContainerDirection: 'column',
-			pwContainerJustifyContent: 'flex-start',
-			width: '100%'
-		}
+		viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape' 
 	};
 	constructor(props) {
 		super(props);
 		Dimensions.addEventListener('change', (dms) => {
 				this.setState({
-					respStyles: {
-						pwContainerDirection: Dimensions.get('window').height > 500 ? 'column' : 'row',
-						pwContainerJustifyContent: Dimensions.get('window').height > 500 ?  'flex-start' : 'space-between',
-						width: Dimensions.get('window').height > 500 ?'100%' : '45%'
-					}
+					viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape' 
 				});
 		});
 	}
@@ -36,7 +34,7 @@ class AuthScreen extends Component {
 
 	render() {
 		let headingText = null;
-		if (Dimensions.get('window').height > 500) {
+		if (this.state.viewMode === 'portrait') {
 			headingText = (
 				<MainText>
 					<HeadingText>Please Log in</HeadingText>
@@ -52,23 +50,23 @@ class AuthScreen extends Component {
 					</ButtondWithBackground>
 					<View style={styles.inputContainer}>
 						<DefaultInput placeholder="Your e-mail adress" style={styles.input} />
-						<View
-							style={{
-								flexDirection: this.state.respStyles.pwContainerDirection,
-								justifyContent: this.state.respStyles.pwContainerJustifyContent
-							}}
-						>
+						<View style={
+							this.state.viewMode === 'landscape' ? 
+							styles.landscapePasswordContainer : 
+							styles.portraitPasswordContainer } >
 							<View
-								style={{
-									width: this.state.respStyles.pwWrapperWidth
-								}}
+								style={
+								this.state.viewMode === 'landscape' ? 
+								styles.landscapePasswordWrapper : 
+								styles.portraitPasswordWrapper}
 							>
 								<DefaultInput placeholder="Password" style={styles.input} />
 							</View>
 							<View
-								style={{
-									width: this.state.respStyles.pwWrapperWidth
-								}}
+								style={
+									this.state.viewMode === 'landscape' ? 
+									styles.landscapePasswordWrapper : 
+									styles.portraitPasswordWrapper}
 							>
 								<DefaultInput placeholder="Confirm password" style={styles.input} />
 							</View>
@@ -99,6 +97,20 @@ const styles = StyleSheet.create({
 	input: {
 		backgroundColor: '#eee',
 		borderColor: '#bbb'
+	},
+	landscapePasswordContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
+	portraitPasswordContainer: {
+		flexDirection: 'column',
+		justifyContent: 'flex-start'
+	},
+	landscapePasswordWrapper: {
+		width: '45%'
+	},
+	portraitPasswordWrapper: {
+		width: '100%'
 	}
 });
 
