@@ -11,7 +11,7 @@ class FindPlace extends Component {
 	state = {
 		placesLoaded: false,
 		removeAnim: new Animated.Value(1),
-		showList: new Animated.Value(0)
+		placesAnim: new Animated.Value(0)
 	}
     constructor(props) {
 		super(props);
@@ -35,7 +35,7 @@ class FindPlace extends Component {
 	}
 
 	placesLoadedHandler = () => {
-		Animated.timing(this.state.showList, {
+		Animated.timing(this.state.placesAnim, {
 			toValue: 1,
 			duration: 500,
 			useNativeDriver: true
@@ -89,11 +89,9 @@ class FindPlace extends Component {
 		if (this.state.placesLoaded) {
 			content = (
 				<Animated.View style={{
-					opacity: this.state.showList,
+					opacity: this.state.placesAnim,
 				}} >
-				<View>
 				<PlaceList places={this.props.places} onItemSelected={this.itemSelectedHandler} />
-			  </View>
 				</Animated.View>
 			)
 		}
