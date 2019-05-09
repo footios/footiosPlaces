@@ -26,3 +26,7 @@ Section 7
 Styling & Animating React Native Apps (Correctly)
 2hr 49min
 
+
+Section 8
+Handling User Input
+1hr 5min
