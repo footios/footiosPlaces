@@ -7,8 +7,7 @@ import HeadingText from '../../components/UI/HeadingText/HeadingText';
 import MainText from '../../components/UI/MainText/MainText';
 import backgroundImage from '../../assets/background.jpg';
 import ButtondWithBackground from '../../components/UI/ButtonWithBackground/ButtonWithBackground';
-import { tsImportEqualsDeclaration } from '@babel/types';
-
+import validation from '../../utility/validation';
 /* Screens are components we load through RNNavigation (instead of Router)! */
 
 class AuthScreen extends Component {
@@ -18,25 +17,92 @@ class AuthScreen extends Component {
 	 Define two different rulls in StyleSheet and load them
 	 according to viewMode. */
 	state = {
-		viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape' 
+		viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape',
+		controls: {
+			email: {
+				value: '',
+				valid: false,
+				validationRules: {
+					isEmail: true
+				}
+			},
+			password: {
+				value: '',
+				valid: false,
+				validationRules: {
+					minLength: 6
+				}
+			},
+			confirmPassword: {
+				value: '',
+				valid: false,
+				validationRules: {
+					equalTo: 'password'
+				}
+			}
+		}
 	};
 	constructor(props) {
 		super(props);
-		Dimensions.addEventListener('change', this.updateStyles )
+		Dimensions.addEventListener('change', this.updateStyles);
 	}
 	// for avoiding momory leaks
 	componentWillUnmount() {
-		Dimensions.removeEventListener('change', this.updateStyles)
+		Dimensions.removeEventListener('change', this.updateStyles);
 	}
 
 	updateStyles = (dms) => {
 		this.setState({
-			viewMode: dms.window.height > 500 ? 'portrait' : 'landscape' 
+			viewMode: dms.window.height > 500 ? 'portrait' : 'landscape'
 		});
-}
+	};
 
 	loginHandler = () => {
 		startMainTabs();
+	};
+
+	updateInputState = (key, value) => {
+		let connectedValue = {};
+		if (this.state.controls[key].validationRules.equalTo) {
+			// equalControl = 'password'
+			const equalControl = this.state.controls[key].validationRules.equalTo;
+			// so now we can get the value of the password...
+			const equalValue = this.state.controls[equalControl].value;
+			connectedValue = {
+				...connectedValue,
+				equalTo: equalValue
+			};
+		}
+		if (key === 'password') {
+			connectedValue = {
+				...connectedValue,
+				equalTo: value
+			};
+		}
+		this.setState((prevState) => {
+			return {
+				...prevState,
+				controls: {
+					...prevState.controls,
+					confirmPassword: {
+						...prevState.controls.confirmPassword,
+						valid:
+							key === 'password'
+								? validation(
+										prevState.controls.confirmPassword.value,
+										prevState.controls.confirmPassword.validationRules,
+										connectedValue
+									)
+								: prevState.controls.confirmPassword.valid
+					},
+					[key]: {
+						...prevState.controls[key],
+						value: value,
+						valid: validation(value, prevState.controls[key].validationRules, connectedValue)
+					}
+				}
+			};
+		});
 	};
 
 	render() {
@@ -56,26 +122,52 @@ class AuthScreen extends Component {
 						Switch to Login
 					</ButtondWithBackground>
 					<View style={styles.inputContainer}>
-						<DefaultInput placeholder="Your e-mail adress" style={styles.input} />
-						<View style={
-							this.state.viewMode === 'landscape' ? 
-							styles.landscapePasswordContainer : 
-							styles.portraitPasswordContainer } >
+						<DefaultInput
+							placeholder="Your e-mail adress"
+							style={styles.input}
+							value={this.state.controls.email.value}
+							onChangeText={(val) => this.updateInputState('email', val)}
+						/>
+						<View
+							style={
+								this.state.viewMode === 'landscape' ? (
+									styles.landscapePasswordContainer
+								) : (
+									styles.portraitPasswordContainer
+								)
+							}
+						>
 							<View
 								style={
-								this.state.viewMode === 'landscape' ? 
-								styles.landscapePasswordWrapper : 
-								styles.portraitPasswordWrapper}
+									this.state.viewMode === 'landscape' ? (
+										styles.landscapePasswordWrapper
+									) : (
+										styles.portraitPasswordWrapper
+									)
+								}
 							>
-								<DefaultInput placeholder="Password" style={styles.input} />
+								<DefaultInput
+									placeholder="Password"
+									style={styles.input}
+									value={this.state.controls.password.value}
+									onChangeText={(val) => this.updateInputState('password', val)}
+								/>
 							</View>
 							<View
 								style={
-									this.state.viewMode === 'landscape' ? 
-									styles.landscapePasswordWrapper : 
-									styles.portraitPasswordWrapper}
+									this.state.viewMode === 'landscape' ? (
+										styles.landscapePasswordWrapper
+									) : (
+										styles.portraitPasswordWrapper
+									)
+								}
 							>
-								<DefaultInput placeholder="Confirm password" style={styles.input} />
+								<DefaultInput
+									placeholder="Confirm password"
+									style={styles.input}
+									value={this.state.controls.confirmPassword.value}
+									onChangeText={(val) => this.updateInputState('confirmPassword', val)}
+								/>
 							</View>
 						</View>
 					</View>
