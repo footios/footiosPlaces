@@ -1,6 +1,7 @@
 import React from 'react'
 import { TextInput, StyleSheet } from 'react-native'
 
+// child of PlaceInput
 const defaultInput = (props) => {
     return ( 
         /* underlineColorAndroid='transparent'

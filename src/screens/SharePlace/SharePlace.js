@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Button, StyleSheet, ScrollView } from 'react-native';
+import { View, Button, StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux';
 
 import { addPlace } from '../../store/actions/index';
@@ -9,12 +9,19 @@ import HeadingText from '../../components/UI/HeadingText/HeadingText';
 import PickImage from '../../components/PickImage/PickImage';
 import PickLocation from '../../components/PickLocation/PickLocation';
 
+import validation from '../../utility/validation';
+
 class SharePlaceScreen extends Component {
 	static navigatorStyle = {
 		navBarButtonColor: 'orange'
-	}
+	};
 	state = {
-		placeName: ''
+		placeName: '',
+		valid: false,
+		touched: false,
+		validationRules: {
+			string: 'string'
+		}
 	};
 	constructor(props) {
 		super(props);
@@ -38,8 +45,13 @@ class SharePlaceScreen extends Component {
 	};
 
 	placeNameChangedHandler = (val) => {
-		this.setState({
-			placeName: val
+		this.setState((prevState) => {
+			return {
+				...prevState,
+				placeName: val,
+				touched: true,
+				valid: validation(val, this.state.validationRules)
+			};
 		});
 	};
 
@@ -51,23 +63,34 @@ class SharePlaceScreen extends Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
-				<ScrollView>
-					<MainText>
-						<HeadingText>Share a place with us!</HeadingText>
-					</MainText>
-					<View >
-					<PickImage />
-					<PickLocation />
-					</View>
-					<View style={styles.placeInput} >
-					<PlaceInput placeName={this.state.placeName} onChangeText={this.placeNameChangedHandler} />
-					</View>
-					<View style={styles.button}>
-						<Button title="Share the Place" onPress={this.placeAddedHandler} />
+			<KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+				<ScrollView style={[styles.scrollViewStyle, {backgroundColor: 'transparent'}]}>
+					<View style={{ flex: 1 }}>
+						<MainText>
+							<HeadingText>Share a place with us!</HeadingText>
+						</MainText>
+						<View>
+							<PickImage />
+							<PickLocation />
+						</View>
+						<View style={styles.placeInput}>
+							<PlaceInput
+								valid={this.state.valid}
+								touched={this.state.touched}
+								placeName={this.state.placeName}
+								onChangeText={this.placeNameChangedHandler}
+							/>
+						</View>
+						<View style={styles.button}>
+							<Button
+								disabled={!this.state.valid}
+								title="Share the Place"
+								onPress={this.placeAddedHandler}
+							/>
+						</View>
 					</View>
 				</ScrollView>
-			</View>
+			</KeyboardAvoidingView>
 		);
 	}
 }
@@ -75,15 +98,25 @@ class SharePlaceScreen extends Component {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		alignItems: 'center'
+		alignItems: 'center',
+		// position: 'relative' // for scroll to not snap back, but not working
 	},
 	button: {
 		margin: 8
 	},
 	placeInput: {
 		width: 300,
-		alignItems: 'center'
-	}
+		alignItems: 'center',
+		// justifyContent: 'center'
+		
+	},
+	// scrollViewStyle: { // for scroll to not snap back, but not working
+	// 	position: 'absolute',
+	// 	top: 0,
+	// 	left: 0,
+	// 	right: 0,
+	// 	bottom: 0,
+	// },
 });
 
 const mapDispatchToProps = (dispatch) => {

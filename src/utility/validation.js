@@ -11,6 +11,9 @@ const validation = (val, rules, connectedValue) => {
 			case 'equalTo':
 				isValid = isValid && equalToValidator(val, connectedValue[rule]);
 				break;
+			case 'string':
+				isValid = isValid && placeIsString(val);
+				break;
 			default:
 				isValid = true;
 		}
@@ -33,5 +36,11 @@ const minLengthValidator = (val, minLength) => {
 const equalToValidator = (val, checkValue) => {
 	return val === checkValue;
 };
+
+const placeIsString = (val) => {
+	if (val.trim() !== '') {
+		return true
+	}
+}
 
 export default validation;
