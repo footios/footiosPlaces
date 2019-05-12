@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Button, StyleSheet, ScrollView } from 'react-native';
+import { View, Button, StyleSheet  } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { connect } from 'react-redux';
 
 import { addPlace } from '../../store/actions/index';
@@ -70,8 +71,8 @@ class SharePlaceScreen extends Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
-				<ScrollView>
+			<View behavior={'padding'} style={styles.container}>
+				<KeyboardAwareScrollView>
 					<MainText>
 						<HeadingText style={{alignItems: 'center'}} >Share a place with us!</HeadingText>
 					</MainText>
@@ -87,11 +88,11 @@ class SharePlaceScreen extends Component {
 					</View>
 					<View style={styles.button}>
 						<Button 
-						disabled={!this.state.controls.placeName.valid}
+						disabled={!this.state.controls.placeName.valid || this.state.controls.placeName.value === ''}
 						title="Share the Place" 
 						onPress={this.placeAddedHandler} />
 					</View>
-				</ScrollView>
+				</KeyboardAwareScrollView>
 			</View>
 		);
 	}
