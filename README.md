@@ -30,3 +30,7 @@ Styling & Animating React Native Apps (Correctly)
 Section 8
 Handling User Input
 1hr 5min
+
+Section 9
+Using Native Device Features - Maps, Camera & Image Gallery
+1hr 12min
