@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, Button, StyleSheet  } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { View, Button, StyleSheet } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 
 import { addPlace } from '../../store/actions/index';
@@ -10,11 +10,11 @@ import HeadingText from '../../components/UI/HeadingText/HeadingText';
 import PickImage from '../../components/PickImage/PickImage';
 import PickLocation from '../../components/PickLocation/PickLocation';
 
-import validation from '../../utility/validation'
+import validation from '../../utility/validation';
 class SharePlaceScreen extends Component {
 	static navigatorStyle = {
 		navBarButtonColor: 'orange'
-	}
+	};
 	state = {
 		controls: {
 			placeName: {
@@ -25,6 +25,10 @@ class SharePlaceScreen extends Component {
 					notEmpty: true
 				}
 			},
+			location: {
+				value: null,
+				valid: false
+			}
 		}
 	};
 	constructor(props) {
@@ -49,7 +53,7 @@ class SharePlaceScreen extends Component {
 	};
 
 	placeNameChangedHandler = (val) => {
-		this.setState(prevState => {
+		this.setState((prevState) => {
 			return {
 				controls: {
 					...prevState.controls,
@@ -59,14 +63,26 @@ class SharePlaceScreen extends Component {
 						valid: validation(val, prevState.controls.placeName.validationRules)
 					}
 				}
-			}
+			};
+		});
+	};
+
+	locationPickedHandler = (location) => {
+		this.setState((prevState) => {
+			return {
+				controls: {
+					...prevState.controls,
+					location: {
+						value: location,
+						valid: true
+					}
+				}
+			};
 		});
 	};
 
 	placeAddedHandler = () => {
-		if (this.state.controls.placeName.value.trim() !== '') {
-			this.props.onAddPlace(this.state.placeName);
-		}
+		this.props.onAddPlace(this.state.placeName, this.state.controls.location.value);
 	};
 
 	render() {
@@ -74,23 +90,25 @@ class SharePlaceScreen extends Component {
 			<View behavior={'padding'} style={styles.container}>
 				<KeyboardAwareScrollView>
 					<MainText>
-						<HeadingText style={{alignItems: 'center'}} >Share a place with us!</HeadingText>
+						<HeadingText style={{ alignItems: 'center' }}>Share a place with us!</HeadingText>
 					</MainText>
-					<View >
-					<PickImage />
-					<PickLocation />
+					<View>
+						<PickImage />
+						<PickLocation onLocationPick={this.locationPickedHandler} />
 					</View>
-					<View style={styles.placeInput} >
-					<PlaceInput 
-					/* placeName has all the controls placeData is intrested in */
-					placeData={this.state.controls.placeName} 
-					onChangeText={this.placeNameChangedHandler} />
+					<View style={styles.placeInput}>
+						<PlaceInput
+							/* placeName has all the controls placeData is intrested in */
+							placeData={this.state.controls.placeName}
+							onChangeText={this.placeNameChangedHandler}
+						/>
 					</View>
 					<View style={styles.button}>
-						<Button 
-						disabled={!this.state.controls.placeName.valid || this.state.controls.placeName.value === ''}
-						title="Share the Place" 
-						onPress={this.placeAddedHandler} />
+						<Button
+							disabled={!this.state.controls.placeName.valid || !this.state.controls.location.valid}
+							title="Share the Place"
+							onPress={this.placeAddedHandler}
+						/>
 					</View>
 				</KeyboardAwareScrollView>
 			</View>
@@ -114,7 +132,7 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onAddPlace: (placeName) => dispatch(addPlace(placeName))
+		onAddPlace: (placeName, location) => dispatch(addPlace(placeName, location))
 	};
 };
 
