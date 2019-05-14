@@ -5,6 +5,7 @@ import { View, Image, Text, StyleSheet, TouchableOpacity, Platform } from 'react
 
 import { deletePlace } from '../../store/actions/index';
 
+// gets pushed from FindPlace
 class PlaceDetail extends Component {
 
 	placeDeleteHandler = () => {
