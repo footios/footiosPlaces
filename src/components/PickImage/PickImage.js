@@ -9,7 +9,8 @@ class PickImage extends Component {
 	};
 
 	pickedImageHandler = () => {
-		/* if you don't need base64... you can set
+		/* if you don't need base64...(the image as a string, so you can send it over the internet) 
+		you can set
 		title: 'Pick an Image', noData: true
 		to improve performance */
 		ImagePicker.showImagePicker({title: 'Pick an Image'}, res => {

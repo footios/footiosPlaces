@@ -34,3 +34,7 @@ Handling User Input
 Section 9
 Using Native Device Features - Maps, Camera & Image Gallery
 1hr 12min
+
+Section 10
+Networking - Sending Http Requests
+1hr 22min
