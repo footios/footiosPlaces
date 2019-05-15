@@ -28,6 +28,10 @@ class SharePlaceScreen extends Component {
 			location: {
 				value: null,
 				valid: false
+			},
+			image: {
+				value: null,
+				valid: false
 			}
 		}
 	};
@@ -81,19 +85,38 @@ class SharePlaceScreen extends Component {
 		});
 	};
 
+	imagePickedHandler = (image) => {
+		this.setState((prevState) => {
+			return {
+				controls: {
+					...prevState.controls,
+					image: {
+						value: image,
+						valid: true
+					}
+				}
+			};
+		});
+	};
+
 	placeAddedHandler = () => {
-		this.props.onAddPlace(this.state.controls.placeName.value, this.state.controls.location.value);
+		this.props.onAddPlace(
+			this.state.controls.placeName.value, 
+			this.state.controls.location.value,
+			this.state.controls.image.value);
 	};
 
 	render() {
 		return (
 			<View behavior={'padding'} style={styles.container}>
 				<KeyboardAwareScrollView>
-					<MainText>
-						<HeadingText style={{ alignItems: 'center' }}>Share a place with us!</HeadingText>
-					</MainText>
+					<View style={{ alignItems: 'center' }}>
+						<MainText>
+							<HeadingText>Share a place with us!</HeadingText>
+						</MainText>
+					</View>
 					<View>
-						<PickImage />
+						<PickImage onImagePicked={this.imagePickedHandler} />
 						<PickLocation onLocationPick={this.locationPickedHandler} />
 					</View>
 					<View style={styles.placeInput}>
@@ -105,7 +128,11 @@ class SharePlaceScreen extends Component {
 					</View>
 					<View style={styles.button}>
 						<Button
-							disabled={!this.state.controls.placeName.valid || !this.state.controls.location.valid}
+							disabled={
+								!this.state.controls.placeName.valid || 
+								!this.state.controls.location.valid ||
+								!this.state.controls.image.valid
+							}
 							title="Share the Place"
 							onPress={this.placeAddedHandler}
 						/>
@@ -132,7 +159,7 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onAddPlace: (placeName, location) => dispatch(addPlace(placeName, location))
+		onAddPlace: (placeName, location, image) => dispatch(addPlace(placeName, location, image))
 	};
 };
 
