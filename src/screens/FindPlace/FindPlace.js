@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import PlaceList from '../../components/PlaceList/PlaceList';
 
+
 class FindPlace extends Component {
 	static navigatorStyle = {
 		navBarButtonColor: 'orange'
@@ -57,6 +58,7 @@ class FindPlace extends Component {
 		const selPlace = this.props.places.find((place) => {
 			return place.key === key;
 		});
+		console.log(selPlace);
 		this.props.navigator.push({
 			screen: 'footios-places.PlaceDetailScreen',
 			title: selPlace.name,
