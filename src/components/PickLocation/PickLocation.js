@@ -68,7 +68,7 @@ class PickLocation extends Component {
 			<View style={{ alignItems: 'center' }}>
 				<MapView
 					initialRegion={this.state.focusedLocation}
-					// region={this.state.focusedLocation} we don't need it, because on animateToRegion
+					// region={this.state.focusedLocation} we don't need it, because of animateToRegion
 					style={styles.map}
 					onPress={this.pickLocationHandler}
 					ref={(ref) => (this.map = ref)}
