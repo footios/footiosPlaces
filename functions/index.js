@@ -25,10 +25,9 @@ exports.storeImage = functions.https.onRequest((request, response) => {
 			{
 				uploadType: 'media',
 				destination: '/places/' + uuid + '.jpg',
-
+				resumable: false,
 				metadata: {
 					metadata: {
-						resumable: false,
 						contentType: 'image/jpeg',
 						firebaseStorageDownloadTokens: uuid
 					}
@@ -62,8 +61,9 @@ exports.storeImage = functions.https.onRequest((request, response) => {
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 
-// cloud funcs: on demand code repos we can execute and target from outside...
-// like a restful api
+// cloud funcs: on demand code repos we can execute and target from outside... 
+// like a restful api,
+// i.e. an http request.
 /* 
 So we will be able to send the request to some url of our definition
 and when we do this, then a specific cloud function will run and execute code and there, 
@@ -76,7 +76,7 @@ since that runs not on our client but on firebase.
 google-tools: that's just a cli that makes it easy to put this project 
 under control of firebase. 
 It just makes it very convenient to write and deploy a cloud function here.
-Note: We write (here with Firebase's backend ) cloud funcs with Node.js!
+Note: We must write (here with Firebase's backend) cloud funcs with Node.js!
 
 Steps in cloud func:
 1. Use the request,
@@ -93,7 +93,7 @@ so from apps not running on the same server as our firebase app does
 and this of course will be the case,
 our app will run on a native device.
 
-In the cors func we can extract the image ant store it.
+In the cors func we can extract the image and store it.
 There we parse the request.body of the firebase obj.
 Then we need to save this file to cloud storage.
 But first we temporarily save it here 

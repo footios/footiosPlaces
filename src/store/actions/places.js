@@ -8,6 +8,7 @@ export const addPlace = (placeName, location, image) => {
 	//     image: image
 	// };
 	return dispatch => {
+        // with this fetch we trigger the cloud function on Firebase
         fetch("https://us-central1-footiosplaces-1557725622585.cloudfunctions.net/storeImage", {
             method: "POST",
             body: JSON.stringify({
