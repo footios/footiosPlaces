@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, Image, Button, StyleSheet } from 'react-native';
 import ImagePicker from 'react-native-image-picker'
 
-
 class PickImage extends Component {
 	state = {
 		pickedImage: null
@@ -13,7 +12,16 @@ class PickImage extends Component {
 		you can set
 		title: 'Pick an Image', noData: true
 		to improve performance */
-		ImagePicker.showImagePicker({title: 'Pick an Image'}, res => {
+		const options = {
+			title: 'Pick an Image',
+			// Very important!
+			// maxWidth and maxHeigth are set to 30 (very small)
+			// because we cannot upload imgs larger than 10mb.
+			maxWidth: 30, 
+			maxHeight: 30,
+		  };
+
+		ImagePicker.showImagePicker(options, res => {
 			if (res.didCancel){
 				console.log('User cancelled');
 			} else if (res.error){
@@ -42,8 +50,8 @@ class PickImage extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-        // width: '100%',
-        // alignItems: 'center'
+        width: '100%',
+        alignItems: 'center'
 	},
 	placeholder: {
 		borderWidth: 1,
@@ -62,3 +70,4 @@ const styles = StyleSheet.create({
 });
 
 export default PickImage;
+
