@@ -3,37 +3,41 @@ import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native
 import { connect } from 'react-redux';
 
 import PlaceList from '../../components/PlaceList/PlaceList';
-
+import { getPlaces } from '../../store/actions';
 
 class FindPlace extends Component {
 	static navigatorStyle = {
 		navBarButtonColor: 'orange'
-	}
+	};
 	state = {
 		placesLoaded: false,
 		removeAnim: new Animated.Value(1),
 		placesAnim: new Animated.Value(0)
-	}
-    constructor(props) {
+	};
+	constructor(props) {
 		super(props);
 		// setOnNavigatorEvent: here we specify a meth that should be executed
 		// every time an event occurs.
-		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent)
+		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
+	}
+
+	componentDidMount() {
+		this.props.onLoadPlaces();
 	}
 
 	// above in the constructor, we don't need to bind.`this`
 	// because we use here an arrow func.
 	// like this: this.onNavigatorEvent.bind(this)
-	onNavigatorEvent = event => {
+	onNavigatorEvent = (event) => {
 		//console.log(event);
-		if (event.type === 'NavBarButtonPress'){
-			if (event.id === 'sideDrawerToggle'){
+		if (event.type === 'NavBarButtonPress') {
+			if (event.id === 'sideDrawerToggle') {
 				this.props.navigator.toggleDrawer({
-					side: 'left' 
-				})
+					side: 'left'
+				});
 			}
 		}
-	}
+	};
 
 	placesLoadedHandler = () => {
 		Animated.timing(this.state.placesAnim, {
@@ -41,7 +45,7 @@ class FindPlace extends Component {
 			duration: 500,
 			useNativeDriver: true
 		}).start();
-	}
+	};
 
 	placesSearchHandler = () => {
 		Animated.timing(this.state.removeAnim, {
@@ -49,11 +53,11 @@ class FindPlace extends Component {
 			duration: 500,
 			useNativeDriver: true
 		}).start(() => {
-			this.setState({placesLoaded: true});
+			this.setState({ placesLoaded: true });
 			this.placesLoadedHandler();
-		})
-	}
- 
+		});
+	};
+
 	itemSelectedHandler = (key) => {
 		const selPlace = this.props.places.find((place) => {
 			return place.key === key;
@@ -68,40 +72,39 @@ class FindPlace extends Component {
 		});
 	};
 	render() {
-	
 		let content = (
-			<Animated.View style={{
-				opacity: this.state.removeAnim,
-				transform: [
-					{
-						scale: this.state.removeAnim.interpolate({
-							inputRange: [0, 1],
-							outputRange: [12, 1]
-						})
-					}
-				]
-			}} >
-			<TouchableOpacity onPress={this.placesSearchHandler} >
-				<View style={styles.searchButton} >
-					<Text style={styles.searchButtonText} >Find Places</Text>
-				</View>
-			</TouchableOpacity>
+			<Animated.View
+				style={{
+					opacity: this.state.removeAnim,
+					transform: [
+						{
+							scale: this.state.removeAnim.interpolate({
+								inputRange: [ 0, 1 ],
+								outputRange: [ 12, 1 ]
+							})
+						}
+					]
+				}}
+			>
+				<TouchableOpacity onPress={this.placesSearchHandler}>
+					<View style={styles.searchButton}>
+						<Text style={styles.searchButtonText}>Find Places</Text>
+					</View>
+				</TouchableOpacity>
 			</Animated.View>
-		)
+		);
 		if (this.state.placesLoaded) {
 			content = (
-				<Animated.View style={{
-					opacity: this.state.placesAnim,
-				}} >
-				<PlaceList places={this.props.places} onItemSelected={this.itemSelectedHandler} />
+				<Animated.View
+					style={{
+						opacity: this.state.placesAnim
+					}}
+				>
+					<PlaceList places={this.props.places} onItemSelected={this.itemSelectedHandler} />
 				</Animated.View>
-			)
+			);
 		}
-		return (
-			<View style={this.state.placesLoaded ? null : styles.buttonContainer} >
-				{content}
-			</View>
-		)
+		return <View style={this.state.placesLoaded ? null : styles.buttonContainer}>{content}</View>;
 	}
 }
 
@@ -122,11 +125,17 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		fontSize: 26
 	}
-})
+});
 const mapStateToProps = (state) => {
 	return {
 		places: state.places.places
 	};
 };
 
-export default connect(mapStateToProps)(FindPlace);
+const mapDispatchToProps = (dispatch) => {
+	return {
+		onLoadPlaces: () => dispatch(getPlaces())
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FindPlace);
