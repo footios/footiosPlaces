@@ -13,15 +13,17 @@ class PickImage extends Component {
 		title: 'Pick an Image', noData: true
 		to improve performance */
 		const options = {
-			title: 'Pick an Image'
+			title: 'Pick an Image',
 			// Very important!
 			// maxWidth and maxHeigth are set to 30 (very small)
 			// because we cannot upload imgs larger than 10mb.
-			// maxWidth: 30, 
-			// maxHeight: 30,
+			maxWidth: 30, 
+			maxHeight: 30,
 			/* Not needed. We added `resumable: false`, 
 			to the cloud function and run `firebase deploy`
-			because we modified the cloud function. */
+			because we modified the cloud function. 
+			But, we can keep it, just to avoid the 
+			long wainting loading time.*/
 		  };
 
 		ImagePicker.showImagePicker(options, res => {

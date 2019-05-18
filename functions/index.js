@@ -10,6 +10,8 @@ const gcconfig = {
 
 const gcs = require('@google-cloud/storage')(gcconfig);
 
+// NOTE!!!
+// IF YOU MODIFY THE CLOUD FUNCTION YOU HAVE TO RUN `firebase deploy` AGAIN...
 exports.storeImage = functions.https.onRequest((request, response) => {
 	return cors(request, response, () => {
 		const body = JSON.parse(request.body);

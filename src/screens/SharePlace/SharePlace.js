@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, ActivityIndicator } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { connect } from 'react-redux';
 
@@ -101,12 +101,29 @@ class SharePlaceScreen extends Component {
 
 	placeAddedHandler = () => {
 		this.props.onAddPlace(
-			this.state.controls.placeName.value, 
+			this.state.controls.placeName.value,
 			this.state.controls.location.value,
-			this.state.controls.image.value);
+			this.state.controls.image.value
+		);
 	};
 
 	render() {
+		let submitButton = (
+			<Button
+				disabled={
+					!this.state.controls.placeName.valid ||
+					!this.state.controls.location.valid ||
+					!this.state.controls.image.valid
+				}
+				title="Share the Place"
+				onPress={this.placeAddedHandler}
+			/>
+		);
+
+		if (this.props.isLoading) {
+			submitButton = <ActivityIndicator size="large" color="#0000ff" />
+		}
+
 		return (
 			<View behavior={'padding'} style={styles.container}>
 				<KeyboardAwareScrollView>
@@ -126,17 +143,7 @@ class SharePlaceScreen extends Component {
 							onChangeText={this.placeNameChangedHandler}
 						/>
 					</View>
-					<View style={styles.button}>
-						<Button
-							disabled={
-								!this.state.controls.placeName.valid || 
-								!this.state.controls.location.valid ||
-								!this.state.controls.image.valid
-							}
-							title="Share the Place"
-							onPress={this.placeAddedHandler}
-						/>
-					</View>
+					<View style={styles.button}>{submitButton}</View>
 				</KeyboardAwareScrollView>
 			</View>
 		);
@@ -149,13 +156,19 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	button: {
-		margin: 8
+		margin: 8,
+		alignItems: 'center'
 	},
 	placeInput: {
 		width: 300,
 		alignItems: 'center'
 	}
 });
+const mapStateToProps = (state) => {
+	return {
+		isLoading: state.ui.isLoading
+	};
+};
 
 const mapDispatchToProps = (dispatch) => {
 	return {
@@ -163,4 +176,4 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-export default connect(null, mapDispatchToProps)(SharePlaceScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(SharePlaceScreen);
