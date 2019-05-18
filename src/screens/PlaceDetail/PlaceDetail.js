@@ -5,6 +5,7 @@ import { View, Image, Text, StyleSheet, TouchableOpacity, Platform, Dimensions }
 import MapView from 'react-native-maps';
 
 import { deletePlace } from '../../store/actions/index';
+import { getPlaces } from '../../store/actions';
 
 // gets pushed from FindPlace
 class PlaceDetail extends Component {
@@ -28,6 +29,7 @@ class PlaceDetail extends Component {
 	placeDeleteHandler = () => {
 		// selectedPlace: is props we pushed from FindPlace
 		this.props.onDeletePlace(this.props.selectedPlace.key);
+		this.props.onLoadPlaces();
 		this.props.navigator.pop();
 	};
 
@@ -143,7 +145,8 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onDeletePlace: (key) => dispatch(deletePlace(key))
+		onDeletePlace: (key) => dispatch(deletePlace(key)),
+		onLoadPlaces: () => dispatch(getPlaces())
 	};
 };
 

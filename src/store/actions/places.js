@@ -78,8 +78,21 @@ export const setPlaces = (places) => {
 };
 
 export const deletePlace = (key) => {
-	return fetch('https://footiosplaces-1557725622585.firebaseio.com/places' + key + '.json', {
-		method: 'DELETE'
-		
-	});
+	return (dispatch) => {
+		return fetch('https://footiosplaces-1557725622585.firebaseio.com/places/' + key + '.json', {
+			method: 'DELETE'
+		}).then((parsedRes) => {
+			const places = [];
+			for (let key in parsedRes) {
+				places.push({
+					...parsedRes[key],
+					key: key,
+					image: {
+						uri: parsedRes[key].image
+					}
+				});
+			}
+			dispatch(setPlaces(places));
+		});
+	};
 };
