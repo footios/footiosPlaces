@@ -11,6 +11,8 @@ import PickImage from '../../components/PickImage/PickImage';
 import PickLocation from '../../components/PickLocation/PickLocation';
 
 import validation from '../../utility/validation';
+
+
 class SharePlaceScreen extends Component {
 	static navigatorStyle = {
 		navBarButtonColor: 'orange'
