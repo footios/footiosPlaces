@@ -45,10 +45,25 @@ export const tryAuth = (authData, authMode) => {
 		};
 	};
 
+
 	export const authSetToken = token => {
 		return {
 			type: AUTH_SET_TOKEN,
 			token: token
+		}
+	}
+
+	export const authGetToken = () => {
+		return (dispatch, getState) => {
+			const promise = new Promise((resolve, reject) => {
+				const token = getState().auth.token;
+				if(token !== null) {
+					resolve(token)
+				} else {
+					reject();
+				}
+			})
+			return promise;
 		}
 	}
 

@@ -1,4 +1,5 @@
 const functions = require('firebase-functions');
+const admin = require('firebase-admin');
 const cors = require('cors')({ origin: true });
 const fs = require('fs');
 const UUID = require('uuid-v4');
@@ -10,48 +11,77 @@ const gcconfig = {
 
 const gcs = require('@google-cloud/storage')(gcconfig);
 
+admin.initializeApp({
+	credential: admin.credential.cert(require('./footiosplaces.json'))
+});
+
 // NOTE!!!
 // IF YOU MODIFY THE CLOUD FUNCTION YOU HAVE TO RUN `firebase deploy` AGAIN...
 exports.storeImage = functions.https.onRequest((request, response) => {
 	return cors(request, response, () => {
-		const body = JSON.parse(request.body);
-		fs.writeFileSync('/tmp/uploaded-image.jpg', body.image, 'base64', (err) => {
-			console.log(err);
-			return response.status(500).json({ error: err });
-		});
-		const bucket = gcs.bucket('footiosplaces-1557725622585.appspot.com');
-		const uuid = UUID();
+		/* Check if either we have no authrization or not the authorization we want */
+		if (!request.headers.authorization || !request.headers.authorization.startsWith('Bearer ')) {
+			console.log('No token present');
+			response.status(403).json({ error: 'Unauthorized' });
+			return;
+		}
+		let idToken;
+		idToken = request.headers.authorization.split('Bearer ')[1];
+		admin.auth().verifyIdToken(idToken).then((decodedToken) => {
+			const body = JSON.parse(request.body);
+			fs.writeFileSync('/tmp/uploaded-image.jpg', body.image, 'base64', (err) => {
+				console.log(err);
+				return response.status(500).json({ error: err });
+			});
+			const bucket = gcs.bucket('footiosplaces-1557725622585.appspot.com');
+			const uuid = UUID();
 
-		return bucket.upload(
-			'/tmp/uploaded-image.jpg',
-			{
-				uploadType: 'media',
-				destination: '/places/' + uuid + '.jpg',
-				resumable: false,
-				metadata: {
+			return bucket.upload(
+				'/tmp/uploaded-image.jpg',
+				{
+					uploadType: 'media',
+					destination: '/places/' + uuid + '.jpg',
+					resumable: false,
 					metadata: {
-						contentType: 'image/jpeg',
-						firebaseStorageDownloadTokens: uuid
+						metadata: {
+							contentType: 'image/jpeg',
+							firebaseStorageDownloadTokens: uuid
+						}
+					}
+				},
+				(err, file) => {
+					if (!err) {
+						/* 201 Created
+						The request has succeeded and a new resource has been created as a result of it. 
+						This is typically the response sent after a POST request, or after some PUT requests. */
+						return response.status(201).json({
+							imageUrl:
+								'https://firebasestorage.googleapis.com/v0/b/' +
+								bucket.name +
+								'/o/' +
+								encodeURIComponent(file.name) +
+								'?alt=media&token=' +
+								uuid
+						});
+					} else {
+						console.log(err);
+						/* 500 Internal Server Error
+						The server has encountered a situation it doesn't know how to handle. */
+						return response.status(500).json({ error: err });
 					}
 				}
-			},
-			(err, file) => {
-				if (!err) {
-					return response.status(201).json({
-						imageUrl:
-							'https://firebasestorage.googleapis.com/v0/b/' +
-							bucket.name +
-							'/o/' +
-							encodeURIComponent(file.name) +
-							'?alt=media&token=' +
-							uuid
-					});
-				} else {
-					console.log(err);
-					return response.status(500).json({ error: err });
-				}
-			}
-		);
+			);
+		})
+		.catch(error => {
+			console.log("Token is invalid");
+			/* 
+			403 Forbidden
+			The client does not have access rights to the content, 
+			i.e. they are unauthorized, so server is rejecting to give proper response. 
+			Unlike 401, the client's identity is known to the server.
+			*/
+			response.status(403).json({error: "Unauthorized"})
+		})
 	});
 });
 // 'footiosplaces-1557725622585'
@@ -63,10 +93,10 @@ exports.storeImage = functions.https.onRequest((request, response) => {
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 
-// cloud funcs: on demand code repos we can execute and target from outside... 
+// cloud funcs: on demand code repos we can execute and target from outside...
 // like a restful api,
 // i.e. an http request.
-// Note: cloud functions run on firebase. After writing them (or modify them) 
+// Note: cloud functions run on firebase. After writing them (or modify them)
 // we have to run `firebase deploy`. This will upload them on Firebase.
 /* 
 So we will be able to send the request to some url of our definition
@@ -134,5 +164,3 @@ without having general access rights
  
 from firebase storage rules: if request.auth != null 
 */
-
-
