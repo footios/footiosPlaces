@@ -66,6 +66,8 @@ exports.storeImage = functions.https.onRequest((request, response) => {
 // cloud funcs: on demand code repos we can execute and target from outside... 
 // like a restful api,
 // i.e. an http request.
+// Note: cloud functions run on firebase. After writing them (or modify them) 
+// we have to run `firebase deploy`. This will upload them on Firebase.
 /* 
 So we will be able to send the request to some url of our definition
 and when we do this, then a specific cloud function will run and execute code and there, 
@@ -77,7 +79,7 @@ since that runs not on our client but on firebase.
 * install google-tools && firebase init etc.
 google-tools: that's just a cli that makes it easy to put this project 
 under control of firebase. 
-It just makes it very convenient to write and deploy a cloud function here.
+It just makes it very convenient to write and deploy a cloud functions here.
 Note: We must write (here with Firebase's backend) cloud funcs with Node.js!
 
 Steps in cloud func:
@@ -99,7 +101,7 @@ In the cors func we can extract the image and store it.
 There we parse the request.body of the firebase obj.
 Then we need to save this file to cloud storage.
 But first we temporarily save it here 
-and then forwared it firebase storage.
+and then forwared it to firebase storage.
 
 fs.writeFileSync() will write the file
 and block the execution untill it's done.
@@ -116,7 +118,7 @@ Name of bucket is 1st arg.
 Then upload() bucket.
 Set the path and the config (2nd arg).
 3d arg: a func that will be executed once upload is done.
-If the func doesn return an error then:
+If the func doesn't return an error then:
 "I want to return a response with the link to the file 
 which would allow us to view the file because
 that is what I want to store in the database thereafter,
@@ -128,7 +130,8 @@ status(201): a file is created
 with `imageUrl` we directly access the image 
 without having general access rights
 
-
+-----
+ 
 from firebase storage rules: if request.auth != null 
 */
 

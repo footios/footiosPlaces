@@ -14,7 +14,7 @@ const store = configureStore();
 // 1. register screens and
 // 2. start the app
 
-// Registe Screens
+// Register Screens
 // Note: We load screens which we registered in advance by an ID!
 // You have to register a component before you load it with RNN
 Navigation.registerComponent('footios-places.AuthScreen', () => AuthScreen, store, Provider);

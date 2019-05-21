@@ -38,3 +38,7 @@ Using Native Device Features - Maps, Camera & Image Gallery
 Section 10
 Networking - Sending Http Requests
 1hr 22min
+
+Section 11
+Authentication in React Native Apps
+1hr 59min
