@@ -1,4 +1,4 @@
-import { SET_PLACES, REMOVE_PLACE  } from './actionTypes';
+import { SET_PLACES, REMOVE_PLACE } from './actionTypes';
 import { uiStartLoading, uiStopLoading } from '../actions/ui';
 
 export const addPlace = (placeName, location, image) => {
@@ -31,7 +31,6 @@ export const addPlace = (placeName, location, image) => {
 				});
 			})
 			.catch((err) => {
-				// catches all 4xx and 5xx errors
 				console.log(err);
 				alert('Something went wrong, please try again!');
 				dispatch(uiStopLoading());
@@ -39,6 +38,12 @@ export const addPlace = (placeName, location, image) => {
 			.then((res) => res.json())
 			.then((parsedRes) => {
 				console.log(parsedRes);
+				dispatch(uiStopLoading());
+			})
+			.catch((err) => {
+				// catches all 4xx and 5xx errors
+				console.log(err);
+				alert('Something went wrong, please try again!');
 				dispatch(uiStopLoading());
 			});
 	};
@@ -50,8 +55,10 @@ export const getPlaces = () => {
 	return (dispatch) => {
 		fetch('https://footiosplaces-1557725622585.firebaseio.com/places.json')
 			.catch((err) => {
+				// does not catch 4xx and 5xx errors
 				console.log(err);
-				alert('Something went wrong, sorry :/!');
+				alert('Something went wrong, please try again!');
+				dispatch(uiStopLoading());
 			})
 			.then((res) => res.json())
 			.then((parsedRes) => {
@@ -65,7 +72,19 @@ export const getPlaces = () => {
 						}
 					});
 				}
+				if (parsedRes.error) {
+					console.log(parsedRes);
+					alert("There was a problem!");
+				} else {
+					alert("Place added!");
+				}
 				dispatch(setPlaces(places));
+			})
+			.catch((err) => {
+				// catches all 4xx and 5xx errors
+				console.log(err);
+				alert('Something went wrong, please try again!');
+				dispatch(uiStopLoading());
 			});
 	};
 };
@@ -79,24 +98,23 @@ export const setPlaces = (places) => {
 
 export const deletePlace = (key) => {
 	return (dispatch) => {
-        dispatch(removePlace(key))
+		dispatch(removePlace(key));
 		return fetch('https://footiosplaces-1557725622585.firebaseio.com/places/' + key + '.json', {
 			method: 'DELETE'
-        })
-        .catch((err) => {
-            console.log(err);
-            alert('Something went wrong, sorry :/!');
-        })
-        .then((parsedRes) => {
-			console.log("Done!");
-            
-		});
+		})
+			.catch((err) => {
+				console.log(err);
+				alert('Something went wrong, sorry :/!');
+			})
+			.then((parsedRes) => {
+				console.log('Done!');
+			});
 	};
 };
 
-export const removePlace = key => {
-    return {
-        type: REMOVE_PLACE,
-        key: key
-    }
-}
+export const removePlace = (key) => {
+	return {
+		type: REMOVE_PLACE,
+		key: key
+	};
+};
