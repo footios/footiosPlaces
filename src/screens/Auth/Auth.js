@@ -18,7 +18,7 @@ import backgroundImage from '../../assets/background.jpg';
 import ButtondWithBackground from '../../components/UI/ButtonWithBackground/ButtonWithBackground';
 import validation from '../../utility/validation';
 
-import { tryAuth } from '../../store/actions';
+import { tryAuth, authAutoSignIn } from '../../store/actions';
 /* Screens are components we load through RNNavigation (instead of Router)! */
 
 class AuthScreen extends Component {
@@ -66,6 +66,11 @@ class AuthScreen extends Component {
 		Dimensions.removeEventListener('change', this.updateStyles);
 	}
 
+	
+	componentDidMount() {
+		this.props.onAutoSignIn()
+	}
+	
 	switchAuthModeHandler = () => {
 		this.setState((prevState) => {
 			return {
@@ -288,7 +293,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onTryAuth: (authData, authMode) => dispatch(tryAuth(authData, authMode))
+		onTryAuth: (authData, authMode) => dispatch(tryAuth(authData, authMode)),
+		onAutoSignIn: () => dispatch(authAutoSignIn())
 	};
 };
 
