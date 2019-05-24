@@ -21,10 +21,10 @@ Navigation.registerComponent('footios-places.AuthScreen', () => AuthScreen, stor
 Navigation.registerComponent('footios-places.SharePlaceScreen', () => SharePlaceScreen, store, Provider);
 Navigation.registerComponent('footios-places.FindPlaceScreen', () => FindPlaceScreen, store, Provider);
 Navigation.registerComponent('footios-places.PlaceDetailScreen', () => PlaceDetailScreen, store, Provider);
-Navigation.registerComponent('footios-places.SideDrawer', () => SideDrawer);
+Navigation.registerComponent('footios-places.SideDrawer', () => SideDrawer, store, Provider);
 
 // Start an App
-Navigation.startSingleScreenApp({
+ export default () => Navigation.startSingleScreenApp({
 	screen: {
 		screen: 'footios-places.AuthScreen',
 		title: 'Login'
