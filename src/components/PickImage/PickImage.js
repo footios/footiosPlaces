@@ -7,6 +7,12 @@ class PickImage extends Component {
 		pickedImage: null
 	};
 
+	reset = () => {
+		this.setState({
+			pickedImage: null
+		})
+	}
+
 	pickedImageHandler = () => {
 		/* if you don't need base64...(the image as a string, so you can send it over the internet) 
 		you can set
@@ -19,11 +25,13 @@ class PickImage extends Component {
 			// because we cannot upload imgs larger than 10mb.
 			maxWidth: 30, 
 			maxHeight: 30,
-			/* Not needed. We added `resumable: false`, 
-			to the cloud function and run `firebase deploy`
-			because we modified the cloud function. 
-			But, we can keep it, just to avoid the 
-			long wainting loading time.*/
+			/* Actually it's not needed. 
+			We added `resumable: false`, 
+			to the cloud function (and run `firebase deploy`
+			because we modified the cloud function). 
+			So now the app can upload big images.
+			But, we can keep the maxWidth..., just to avoid the 
+			long waiting loading time.*/
 		  };
 
 		ImagePicker.showImagePicker(options, res => {

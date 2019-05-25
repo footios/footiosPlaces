@@ -12,37 +12,45 @@ import PickLocation from '../../components/PickLocation/PickLocation';
 
 import validation from '../../utility/validation';
 
-
 class SharePlaceScreen extends Component {
 	static navigatorStyle = {
 		navBarButtonColor: 'orange'
 	};
-	state = {
-		controls: {
-			placeName: {
-				value: '',
-				valid: false,
-				touched: false,
-				validationRules: {
-					notEmpty: true
-				}
-			},
-			location: {
-				value: null,
-				valid: false
-			},
-			image: {
-				value: null,
-				valid: false
-			}
-		}
-	};
+
 	constructor(props) {
 		super(props);
 		// setOnNavigatorEvent: here we specify a method that should be executed
 		// every time an event occurs.
 		this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
 	}
+
+	//WARNING! To be deprecated in React v17. Use componentDidMount instead.
+	componentWillMount() {
+		this.reset();
+	}
+
+	reset = () => {
+		this.setState({
+			controls: {
+				placeName: {
+					value: '',
+					valid: false,
+					touched: false,
+					validationRules: {
+						notEmpty: true
+					}
+				},
+				location: {
+					value: null,
+					valid: false
+				},
+				image: {
+					value: null,
+					valid: false
+				}
+			}
+		});
+	};
 
 	// above in the constructor, we don't need to bind.`this`
 	// like this: this.onNavigatorEvent.bind(this)
@@ -107,6 +115,9 @@ class SharePlaceScreen extends Component {
 			this.state.controls.location.value,
 			this.state.controls.image.value
 		);
+		this.reset();
+		this.imagePicker.reset();
+		this.locationPicker.reset();
 	};
 
 	render() {
@@ -123,7 +134,7 @@ class SharePlaceScreen extends Component {
 		);
 
 		if (this.props.isLoading) {
-			submitButton = <ActivityIndicator size="large" color="#0000ff" />
+			submitButton = <ActivityIndicator size="large" color="#0000ff" />;
 		}
 
 		return (
@@ -135,8 +146,8 @@ class SharePlaceScreen extends Component {
 						</MainText>
 					</View>
 					<View>
-						<PickImage onImagePicked={this.imagePickedHandler} />
-						<PickLocation onLocationPick={this.locationPickedHandler} />
+						<PickImage onImagePicked={this.imagePickedHandler} ref={(ref) => (this.imagePicker = ref)} />
+						<PickLocation onLocationPick={this.locationPickedHandler} ref={ref => this.locationPicker = ref} />
 					</View>
 					<View style={styles.placeInput}>
 						<PlaceInput
