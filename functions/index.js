@@ -27,69 +27,87 @@ exports.storeImage = functions.https.onRequest((request, response) => {
 		}
 		let idToken;
 		idToken = request.headers.authorization.split('Bearer ')[1];
-		admin.auth().verifyIdToken(idToken).then((decodedToken) => {
-			const body = JSON.parse(request.body);
-			fs.writeFileSync('/tmp/uploaded-image.jpg', body.image, 'base64', (err) => {
-				console.log(err);
-				return response.status(500).json({ error: err });
-			});
-			const bucket = gcs.bucket('footiosplaces-1557725622585.appspot.com');
-			const uuid = UUID();
+		admin
+			.auth()
+			.verifyIdToken(idToken)
+			.then((decodedToken) => {
+				const body = JSON.parse(request.body);
+				fs.writeFileSync('/tmp/uploaded-image.jpg', body.image, 'base64', (err) => {
+					console.log(err);
+					return response.status(500).json({ error: err });
+				});
+				const bucket = gcs.bucket('footiosplaces-1557725622585.appspot.com');
+				const uuid = UUID();
 
-			return bucket.upload(
-				'/tmp/uploaded-image.jpg',
-				{
-					uploadType: 'media',
-					destination: '/places/' + uuid + '.jpg',
-					resumable: false,
-					metadata: {
+				return bucket.upload(
+					'/tmp/uploaded-image.jpg',
+					{
+						uploadType: 'media',
+						destination: '/places/' + uuid + '.jpg',
+						resumable: false,
 						metadata: {
-							contentType: 'image/jpeg',
-							firebaseStorageDownloadTokens: uuid
+							metadata: {
+								contentType: 'image/jpeg',
+								firebaseStorageDownloadTokens: uuid
+							}
 						}
-					}
-				},
-				(err, file) => {
-					if (!err) {
-						/* 201 Created
+					},
+					(err, file) => {
+						if (!err) {
+							/* 201 Created
 						The request has succeeded and a new resource has been created as a result of it. 
 						This is typically the response sent after a POST request, or after some PUT requests. */
-						return response.status(201).json({
-							imageUrl:
-								'https://firebasestorage.googleapis.com/v0/b/' +
-								bucket.name +
-								'/o/' +
-								encodeURIComponent(file.name) +
-								'?alt=media&token=' +
-								uuid
-						});
-					} else {
-						console.log(err);
-						/* 500 Internal Server Error
+							return response.status(201).json({
+								imageUrl:
+									'https://firebasestorage.googleapis.com/v0/b/' +
+									bucket.name +
+									'/o/' +
+									encodeURIComponent(file.name) +
+									'?alt=media&token=' +
+									uuid,
+								imagePath: '/places/' + uuid + '.jpg'
+							});
+						} else {
+							console.log(err);
+							/* 500 Internal Server Error
 						The server has encountered a situation it doesn't know how to handle. */
-						return response.status(500).json({ error: err });
+							return response.status(500).json({ error: err });
+						}
 					}
-				}
-			);
-		})
-		.catch(error => {
-			console.log("Token is invalid");
-			/* 
+				);
+			})
+			.catch((error) => {
+				console.log('Token is invalid');
+				/* 
 			403 Forbidden
 			The client does not have access rights to the content, 
 			i.e. they are unauthorized, so server is rejecting to give proper response. 
 			Unlike 401, the client's identity is known to the server.
 			*/
-			response.status(403).json({error: "Unauthorized"})
-		})
+				response.status(403).json({ error: 'Unauthorized' });
+			});
 	});
 });
+
+exports.deleteImage = functions.database.ref('/places/{placeId}').onDelete((snapshot) => {
+	const placeData = snapshot.val();
+	const imagePath = placeData.imagePath;
+
+	const bucket = gcs.bucket('footiosplaces-1557725622585.appspot.com');
+	/* You need to return that bucket here or this promise to be precise
+	because cloud functions that do something asynchronous 
+	need to return a promise so that the function
+	knows when it's done */
+	return bucket.file(imagePath).delete();
+});
+
 // 'footiosplaces-1557725622585'
 // footiosplaces.json
 // footiosplaces-1557725622585.appspot.com
 
 // : if request.auth != null ;
 
+// for: exports.storeImage = functions.https.onRequest((...
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 

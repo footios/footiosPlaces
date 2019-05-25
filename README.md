@@ -1,6 +1,7 @@
 Udemy course:
 [React Native - The Practical Guide](https://www.udemy.com/react-native-the-practical-guide/learn/lecture/12481268#questions/6740459)
 
+Started at 21.04.2019
 
 Section 2
 Diving into the Basics
@@ -42,3 +43,6 @@ Networking - Sending Http Requests
 Section 11
 Authentication in React Native Apps
 1hr 59min
+
+Section 12: Polishing the App
+41min
