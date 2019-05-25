@@ -34,6 +34,15 @@ export const tryAuth = (authData, authMode) => {
 		  alert("Authentication failed, please try again!");
 		  dispatch(uiStopLoading());
 		})
+		// Here we don't need to use this approach
+		// because we handle errors differently.
+		// .then((res) => {
+		// 	if (res.ok) {
+		// 		return res.json();
+		// 	} else {
+		// 		throw(new Error());
+		// 	}
+		// })
 		.then(res => res.json())
 		.then(parsedRes => {
 		  dispatch(uiStopLoading());
