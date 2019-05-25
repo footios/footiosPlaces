@@ -9,8 +9,8 @@ import MainText from '../../components/UI/MainText/MainText';
 import HeadingText from '../../components/UI/HeadingText/HeadingText';
 import PickImage from '../../components/PickImage/PickImage';
 import PickLocation from '../../components/PickLocation/PickLocation';
-
 import validation from '../../utility/validation';
+import { startAddPlace } from '../../store/actions';
 
 class SharePlaceScreen extends Component {
 	static navigatorStyle = {
@@ -52,11 +52,22 @@ class SharePlaceScreen extends Component {
 		});
 	};
 
+	componentDidUpdate() {
+		if (this.props.placeAdded) {
+			this.props.navigator.switchToTab({ tabIndex: 0 });
+		}
+	}
+
 	// above in the constructor, we don't need to bind.`this`
 	// like this: this.onNavigatorEvent.bind(this)
 	// because we use here an arrow func.
 	onNavigatorEvent = (event) => {
-		//console.log(event);
+		// console.log(event);
+		if (event.type === 'ScreenChangedEvent') {
+			if (event.id === 'willAppear') {
+				this.props.onStartAddPlace();
+			}
+		}
 		if (event.type === 'NavBarButtonPress') {
 			if (event.id === 'sideDrawerToggle') {
 				this.props.navigator.toggleDrawer({
@@ -147,7 +158,10 @@ class SharePlaceScreen extends Component {
 					</View>
 					<View>
 						<PickImage onImagePicked={this.imagePickedHandler} ref={(ref) => (this.imagePicker = ref)} />
-						<PickLocation onLocationPick={this.locationPickedHandler} ref={ref => this.locationPicker = ref} />
+						<PickLocation
+							onLocationPick={this.locationPickedHandler}
+							ref={(ref) => (this.locationPicker = ref)}
+						/>
 					</View>
 					<View style={styles.placeInput}>
 						<PlaceInput
@@ -179,13 +193,15 @@ const styles = StyleSheet.create({
 });
 const mapStateToProps = (state) => {
 	return {
-		isLoading: state.ui.isLoading
+		isLoading: state.ui.isLoading,
+		placeAdded: state.places.placeAdded
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onAddPlace: (placeName, location, image) => dispatch(addPlace(placeName, location, image))
+		onAddPlace: (placeName, location, image) => dispatch(addPlace(placeName, location, image)),
+		onStartAddPlace: () => dispatch(startAddPlace())
 	};
 };
 
