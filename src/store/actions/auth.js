@@ -57,7 +57,7 @@ export const tryAuth = (authData, authMode) => {
   export const authStoreToken = (token, expiresIn, refreshToken) => {
 	return dispatch => {
 	  const now = new Date();
-	  const expiryDate = now.getTime() + expiresIn * 1000;
+	  const expiryDate = now.getTime() + 10 * 1000;
 	  dispatch(authSetToken(token, expiryDate));
 	  AsyncStorage.setItem("fp:auth:token", token);
 	  AsyncStorage.setItem("fp:auth:expiryDate", expiryDate.toString());
@@ -107,6 +107,7 @@ export const tryAuth = (authData, authMode) => {
 	  });
 	  return promise
 		.catch(err => {
+			// use refreshToken
 		  return AsyncStorage.getItem("fp:auth:refreshToken")
 			.then(refreshToken => {
 			  return fetch(

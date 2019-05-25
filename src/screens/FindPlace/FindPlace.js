@@ -25,6 +25,19 @@ class FindPlace extends Component {
 		this.props.onLoadPlaces();
 	}
 
+	
+	// componentWillReceiveProps(nextProps) {
+	// 	if (nextProps.places !== this.props.places) {
+	// 		this.props.onLoadPlaces();
+	// 	}
+	// }
+	
+	// componentDidUpdate(prevProps, prevState) {
+	// 		if (prevProps.places !== this.props.places) {
+	// 		this.props.onLoadPlaces();
+	// 	}
+	// }
+
 	// above in the constructor, we don't need to bind.`this`
 	// because we use here an arrow func.
 	// like this: this.onNavigatorEvent.bind(this)
