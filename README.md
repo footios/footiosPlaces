@@ -46,3 +46,6 @@ Authentication in React Native Apps
 
 Section 12: Polishing the App
 41min
+
+Section 13: Publishing the App
+33min
