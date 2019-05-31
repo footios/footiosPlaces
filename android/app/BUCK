@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.footiosplaces",
+    package = "org.greekplaces",
 )
 
 android_resource(
     name = "res",
-    package = "com.footiosplaces",
+    package = "org.greekplaces",
     res = "src/main/res",
 )
 

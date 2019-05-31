@@ -74,7 +74,9 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "index.js"
+    entryFile: "index.js",
+    bundleInDebug: false, //this causes it to bundle when building debug, defaults to false
+    bundleInRelease: true, //this causes it to bundle when building release, defaults to true
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -104,12 +106,48 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.footiosplaces"
+        applicationId "org.greekplaces"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 13
+        versionName "13.0"
+
+        // ndk {
+        //     abiFilters "armeabi-v7a", "x86"
+        // }
+
+        // packagingOptions {
+        //     exclude "lib/arm64-v8a/librealm-jni.so"
+        //     exclude "llibc++_shared.so"
+        //     exclude "llibfb.so"
+        //     exclude "llibfolly_json.so"
+        //     exclude "libglog_init.so"
+        //     exclude "libglog.so"
+        //     exclude "libimagepipeline.so"
+        //     exclude "libjsc.so"
+        //     exclude "libjscexecutor.so"
+        //     exclude "libjsinspector.so"
+        //     exclude "libreactnativejni.so"
+        //     exclude "libyoga.so"
+        // }
+
+        // packagingOptions {
+        //     pickFirst 'lib/x86_64/libjsc.so'
+        //     pickFirst 'lib/arm64-v8a/libjsc.so'
+        // }
     }
+
+      signingConfigs {
+        release {
+            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+                storeFile file(MYAPP_RELEASE_STORE_FILE)
+                storePassword MYAPP_RELEASE_STORE_PASSWORD
+                keyAlias MYAPP_RELEASE_KEY_ALIAS
+                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+            }
+        }
+    }
+
     splits {
         abi {
             reset()
@@ -163,3 +201,4 @@ project.ext.vectoricons = [
 ]
 
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+

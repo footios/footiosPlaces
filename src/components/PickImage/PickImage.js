@@ -23,8 +23,8 @@ class PickImage extends Component {
 			// Very important!
 			// maxWidth and maxHeigth are set to 30 (very small)
 			// because we cannot upload imgs larger than 10mb.
-			maxWidth: 30, 
-			maxHeight: 30,
+			// maxWidth: 600, 
+			// maxHeight: 800,
 			/* Actually it's not needed. 
 			We added `resumable: false`, 
 			to the cloud function (and run `firebase deploy`

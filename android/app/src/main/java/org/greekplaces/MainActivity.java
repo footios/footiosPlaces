@@ -1,4 +1,4 @@
-package com.footiosplaces;
+package org.greekplaces;
 
 import com.reactnativenavigation.controllers.SplashActivity;
 

@@ -49,3 +49,6 @@ Section 12: Polishing the App
 
 Section 13: Publishing the App
 33min
+
+Finished on 28.05.2019 
+Hours of study: 143.
