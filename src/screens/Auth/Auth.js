@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import HeadingText from '../../components/UI/HeadingText/HeadingText';
 import MainText from '../../components/UI/MainText/MainText';
-import backgroundImage from '../../asset/background.jpg';
+import backgroundImage from '../../imgs/background.jpg';
 import ButtondWithBackground from '../../components/UI/ButtonWithBackground/ButtonWithBackground';
 import validation from '../../utility/validation';
 
