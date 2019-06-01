@@ -3,26 +3,37 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
 import { View, Image, Text, StyleSheet, TouchableOpacity, Platform, Dimensions } from 'react-native';
 import MapView from 'react-native-maps';
+import {
+	widthPercentageToDP as wp,
+	heightPercentageToDP as hp,
+	listenOrientationChange as loc,
+	removeOrientationListener as rol
+  } from 'react-native-responsive-screen';
 
 import { deletePlace } from '../../store/actions/index';
 
 // gets pushed from FindPlace
 class PlaceDetail extends Component {
 	state = {
-		viewMode: Dimensions.get('window').height > 500 ? 'portrait' : 'landscape'
+		viewMode: Dimensions.get('window').height > Dimensions.get('window').width ? 'portrait' : 'landscape'
 	};
 	constructor(props) {
 		super(props);
 		Dimensions.addEventListener('change', this.updateStyles);
 	}
+	componentDidMount() {
+		loc(this);
+	  }
+	
 	// for avoiding memory leaks
 	componentWillUnmount() {
+		rol();
 		Dimensions.removeEventListener('change', this.updateStyles);
 	}
 
 	updateStyles = (dms) => {
 		this.setState({
-			viewMode: dms.window.height > 500 ? 'portrait' : 'landscape'
+			viewMode: dms.window.height > dms.window.width ? 'portrait' : 'landscape'
 		});
 	};
 	placeDeleteHandler = () => {
@@ -42,7 +53,7 @@ class PlaceDetail extends Component {
 				>
 					{this.state.viewMode === 'portrait' ? (
 						<View style={styles.nameAndTrushIconPortrait}>
-							<Text style={styles.placeName}>{this.props.selectedPlace.name}</Text>
+							{/* <Text style={styles.placeName}>{this.props.selectedPlace.name}</Text> */}
 							<TouchableOpacity onPress={this.placeDeleteHandler}>
 								<View style={styles.deleteButton}>
 									<Icon
@@ -73,7 +84,7 @@ class PlaceDetail extends Component {
 				</View>
 				{this.state.viewMode === 'landscape' ? (
 					<View style={styles.nameAndTrushIconLandscape}>
-						<Text style={styles.placeName}>{this.props.selectedPlace.name}</Text>
+						{/* <Text style={styles.placeName}>{this.props.selectedPlace.name}</Text> */}
 						<TouchableOpacity onPress={this.placeDeleteHandler}>
 							<View style={styles.deleteButton}>
 								<Icon
@@ -92,7 +103,7 @@ class PlaceDetail extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-		margin: 50,
+		// margin: 50,
 		flex: 1
 	},
 	portraitContainer: {
@@ -100,27 +111,27 @@ const styles = StyleSheet.create({
 	},
 	landscapeContainer: {
 		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
+		justifyContent: 'center',
+		alignItems: 'flex-start',
 	},
 	placeImagePortrait: {
-		width: '100%',
-		height: 200
+		width: wp('100%'),
+		height: hp('40%')
 	},
 	placeImageLandscape: {
 		flex: 1,
-		width: '50%',
-		height: 200
+		width: wp('45%'),
+		height: hp('50%')
 	},
 	placeName: {
 		fontWeight: 'bold',
 		textAlign: 'center',
-		fontSize: 28
+		fontSize: hp('5%')
 	},
 	nameAndTrushIconPortrait: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'space-between'
+		justifyContent: 'center'
 	},
 	nameAndTrushIconLandscape: {
 		flexDirection: 'row',
@@ -131,13 +142,13 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	mapPortrait: {
-		width: '100%',
-		height: 250
+		width: wp('100%'),
+		height: hp('40%')
 	},
 	mapLandscape: {
 		flex: 1,
-		width: '50%',
-		height: 200
+		width: wp('45%'),
+		height: hp('50%')
 	}
 });
 
